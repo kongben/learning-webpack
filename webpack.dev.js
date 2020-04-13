@@ -1,10 +1,12 @@
 const path  = require('path')
 const webpack = require('webpack')
 module.exports = {
+    //需要打包的js文件
     entry:{
         index:'./src/index.js',
         search:'./src/search.js'
     },
+    //输出文件名及目录
     output:{
         path:path.join(__dirname,'dist'),
         filename:'[name].js'
@@ -35,10 +37,10 @@ module.exports = {
                 ]
             },
             // //解析图片
-            // {
-            //     test:/.(png|jpg\gif\jepg)$/,
-            //     use:'file-loader'
-            // },
+            {
+                test:/.(png|jpg\gif\jepg)$/,
+                use:'file-loader'
+            },
             //解析字体
             {
                 test:/.(woff|woff2|eot|ttf|tof)$/,
