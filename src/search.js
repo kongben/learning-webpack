@@ -5,7 +5,7 @@ import './search.less'
 import logo from './avatar.png'
 class Search extends React.Component {
     render() {
-        return <div className='search-text'> <img src={ logo }></img>1 Search Text</div>
+        return <div className='search-text'> <img src={ logo }></img>Search Text</div>
     }
 }
 
