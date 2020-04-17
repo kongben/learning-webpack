@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    ${require('raw-loader!./meta.html')}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <% for(var k in htmlWebpackPlugin.files.chunks){ %>
+    <% if(k!=='main'){ %>
+    <script src="<%= htmlWebpackPlugin.files.chunks[k].entry %>"></script>
+    <% } %>
+<% } %>
+</body>
+</html>

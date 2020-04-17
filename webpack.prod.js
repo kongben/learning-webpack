@@ -1,10 +1,12 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 module.exports = {
     entry: {
-        index: './src/index.js',
-        search: './src/search.js'
+        index: './src/index/index.js',
+        search: './src/search/search.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),
@@ -30,11 +32,35 @@ module.exports = {
             {
                 test: /.less$/,
                 use: [
-                    'style-loader',
+                    // 'style-loader',
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
-                    'less-loader'
+                    'less-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: () => [
+                                require('autoprefixer')({
+                                    overrideBrowserslist: [
+                                        "last 2 version",
+                                        '> 1%',
+                                        "iOS 7",
+                                    ]
+                                })
+                            ]
+                        }
+                    },
+                    //px转rem loader
+                    {
+                        loader: 'px2rem-loader',
+                        options: {
+                            remUnit: 75,
+                            remPrecession: 8 //小数点
+                        }
+                    },
                 ]
             },
+
             //解析字体
             {
                 test: /.(woff|woff2|eot|ttf|tof)$/,
@@ -59,37 +85,46 @@ module.exports = {
                         }
                     }
                 ]
-            }
+            },
         ]
     },
     plugins: [
+        //输出目录新建html
         new HtmlWebpackPlugin({
-            template:path.join(__dirname,'/src/search.html'), //模板位置
-            filename:'search.html', //输出文件名
-            chunks:['search'], //使用哪种chunk
-            inject:true,
-            minify:{
-                html5:true,
-                collapseWhitespace:true,
-                preserveLineBreaks:false,
-                minifyCSS:true,
-                minifyJS:true,
-                removeComments:false
+            template: path.join(__dirname, '/src/search/search.html'), //模板位置
+            filename: 'search.html', //输出文件名
+            chunks: ['search'], //使用哪种chunk
+            // inject: true,
+            minify: {
+                html5: true,
+                collapseWhitespace: true,
+                preserveLineBreaks: false,
+                minifyCSS: true,
+                minifyJS: true,
+                removeComments: false
             }
         }),
+        //输出目录新建html
         new HtmlWebpackPlugin({
-            template:path.join(__dirname,'/src/index.html'), //模板位置
-            filename:'index.html', //输出文件名
-            chunks:['index'], //使用哪种chunk
-            inject:true,
-            minify:{
-                html5:true,
-                collapseWhitespace:true,
-                preserveLineBreaks:false,
-                minifyCSS:true,
-                minifyJS:true,
-                removeComments:false
+            template: path.join(__dirname, '/src/index/index.html'), //模板位置
+            filename: 'index.html', //输出文件名
+            chunks: ['index'], //使用哪种chunk
+            // inject: true,
+            minify: {
+                html5: true,
+                collapseWhitespace: true,
+                preserveLineBreaks: false,
+                minifyCSS: true,
+                minifyJS: true,
+                removeComments: false
             }
+        }),
+        //自动清理dist
+        new CleanWebpackPlugin(),
+        //css导出
+        new MiniCssExtractPlugin({
+            filename: "[name].[chunkhash:8].css",
+            chunkFilename: "[id].css"
         })
     ]
 }
