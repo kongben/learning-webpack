@@ -4,9 +4,11 @@ import './search.css'
 import './search.less'
 import logo from '../assets/avatar.png'
 import "../../common";
+import { a } from "./tree-sharking";
 class Search extends React.Component {
     render() {
-        return <div className='search-text'> <img src={ logo }></img>Search Text</div>
+        const funcA = a()
+        return <div className='search-text'>{funcA} <img src={ logo }></img>Search Text</div>
     }
 }
 
