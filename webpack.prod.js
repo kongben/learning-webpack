@@ -3,6 +3,9 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const glob = require('glob')
+
+
 module.exports = {
     entry: {
         index: './src/index/index.js',
@@ -24,7 +27,8 @@ module.exports = {
             {
                 test: /.css$/,
                 use: [
-                    'style-loader',
+                    // 'style-loader',
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
                 ]
             },
@@ -94,7 +98,7 @@ module.exports = {
             template: path.join(__dirname, '/src/search/search.html'), //模板位置
             filename: 'search.html', //输出文件名
             chunks: ['search'], //使用哪种chunk
-            // inject: true,
+            inject: true,
             minify: {
                 html5: true,
                 collapseWhitespace: true,
@@ -102,14 +106,15 @@ module.exports = {
                 minifyCSS: true,
                 minifyJS: true,
                 removeComments: false
-            }
+            },
+            title: '我是标题'
         }),
         //输出目录新建html
         new HtmlWebpackPlugin({
             template: path.join(__dirname, '/src/index/index.html'), //模板位置
             filename: 'index.html', //输出文件名
             chunks: ['index'], //使用哪种chunk
-            // inject: true,
+            inject: true,
             minify: {
                 html5: true,
                 collapseWhitespace: true,

@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <script>
+        ${require("raw-loader!babel-loader!../../node_modules/lib-flexible/flexible.js")}
+      </script>
 </head>
 <body>
     <div id="root"></div>
-    <script>${require('raw-loader!../node_modules/lib-flexible/flexible.js')}</script>
 </body>
+<script>
+    var json = JSON.parse('<%= JSON.stringify(htmlWebpackPlugin)%>')
+    console.log(json)
+    </script>
 </html>
