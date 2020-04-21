@@ -6,16 +6,54 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const glob = require('glob')
 
 
+//多页面入口
+const setMPA = () => {
+    const entry = {};
+    const HtmlWebpackPlugins = []
+
+    const entryFiles = glob.sync(path.join(__dirname, './src/*/index.js'))
+
+    Object.keys(entryFiles).map((index) => {
+        const entryFile = entryFiles[index]
+        const match = entryFile.match(/src\/(.*)\/index\.js/);
+        const pageName = match && match[1];
+
+        entry[pageName] = entryFile
+
+        HtmlWebpackPlugins.push(//输出目录新建html
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, `/src/${pageName}/index.html`), //模板位置
+                filename: `${pageName}.html`, //输出文件名
+                chunks: [pageName], //使用哪种chunk
+                inject: true,
+                minify: {
+                    html5: true,
+                    collapseWhitespace: true,
+                    preserveLineBreaks: false,
+                    minifyCSS: true,
+                    minifyJS: true,
+                    removeComments: false
+                },
+                title: '我是标题'
+            })
+        )
+    });
+
+    return {
+        entry,
+        HtmlWebpackPlugins
+    }
+}
+
+const { entry, HtmlWebpackPlugins } = setMPA();
+
 module.exports = {
-    entry: {
-        index: './src/index/index.js',
-        search: './src/search/search.js'
-    },
+    entry: entry,
     output: {
         path: path.join(__dirname, 'dist'),
         filename: '[name]_[chunkhash:8].js'
     },
-    mode: 'production',
+    mode: 'none',
     module: {
         rules: [
             //解析ES6
@@ -93,37 +131,6 @@ module.exports = {
         ]
     },
     plugins: [
-        //输出目录新建html
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, '/src/search/search.html'), //模板位置
-            filename: 'search.html', //输出文件名
-            chunks: ['search'], //使用哪种chunk
-            inject: true,
-            minify: {
-                html5: true,
-                collapseWhitespace: true,
-                preserveLineBreaks: false,
-                minifyCSS: true,
-                minifyJS: true,
-                removeComments: false
-            },
-            title: '我是标题'
-        }),
-        //输出目录新建html
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, '/src/index/index.html'), //模板位置
-            filename: 'index.html', //输出文件名
-            chunks: ['index'], //使用哪种chunk
-            inject: true,
-            minify: {
-                html5: true,
-                collapseWhitespace: true,
-                preserveLineBreaks: false,
-                minifyCSS: true,
-                minifyJS: true,
-                removeComments: false
-            }
-        }),
         //自动清理dist
         new CleanWebpackPlugin(),
         //css导出
@@ -131,5 +138,6 @@ module.exports = {
             filename: "[name].[chunkhash:8].css",
             chunkFilename: "[id].css"
         })
-    ]
+    ].concat(HtmlWebpackPlugins),
+    devtool:'inline-source-map'
 }
