@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin') 
 const glob = require('glob')
 
 
@@ -137,7 +138,39 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "[name].[chunkhash:8].css",
             chunkFilename: "[id].css"
-        })
+        }),
+        // new HtmlWebpackExternalsPlugin({
+        //     externals: [
+        //       {
+        //         module: 'react',
+        //         entry: 'https://unpkg.com/react@16/umd/react.development.js',
+        //         global: 'React',
+        //       },{
+        //         module: 'react-dom',
+        //         entry: 'https://unpkg.com/react-dom@16/umd/react-dom.development.js',
+        //         global: 'ReactDOM',
+        //       }
+        //     ],
+        //   })
     ].concat(HtmlWebpackPlugins),
+    optimization: {
+        splitChunks: {
+            // chunks: "async",// all async initial
+            minSize: 0,
+            // maxSize: 0,
+            // minChunks: 1,
+            // maxAsyncRequests: 5,
+            // maxInitialRequests: 3,
+            // automaticNameDelimiter: "~",
+            // name: true,
+            cacheGroups: {
+                commons:{
+                    name:'common',
+                    chunks:'all',
+                    minChunks: 2,
+                }
+            }
+        }
+    },
     devtool:'inline-source-map'
 }
