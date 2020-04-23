@@ -60,7 +60,10 @@ module.exports = {
             //解析ES6
             {
                 test: /.js$/, //匹配所有js
-                use: 'babel-loader',
+                use: [
+                    'babel-loader',
+                    'eslint-loader'
+                ]
             },
             //解析css
             {

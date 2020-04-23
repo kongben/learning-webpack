@@ -26,12 +26,12 @@ class Search extends React.Component {
     render() {
         const funcA = a()
         const { Text } = this.state
-        
+
         return <div className='search-text'>
             {
                 Text ? <Text /> : null
             }
-            {funcA} <img src={logo} onClick={this.loadComponent.bind(this)}></img>
+            {funcA} <img src={logo} onClick={this.loadComponent.bind(this)}/>
             Search Text
             </div>
     }
